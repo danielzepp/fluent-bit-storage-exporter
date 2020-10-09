@@ -1,5 +1,5 @@
 FROM python:3.6-slim-buster
-LABEL maintainer="Dan kim <dan@hpcnt.com>"
+LABEL maintainer="Dongkyu kim <bboyzepot@gmail.com>"
 
 RUN adduser --disabled-password worker
 USER worker
