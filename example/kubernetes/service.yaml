@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: fluent-bit-storage-exporter
+  namespace: default
+  labels:
+    service: fluent-bit-storage-exporter
+spec:
+  type: ClusterIP
+  ports:
+    - name: http-fluent-bit-storage-exporter
+      port: 80
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: fluent-bit-storage-exporter

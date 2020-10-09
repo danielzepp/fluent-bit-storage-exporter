@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  fluent_bit:
+    image: fluent/fluent-bit:1.5-debug
+    volumes:
+      - "./fluent-bit-config:/fluent-bit/etc"
+  fluent_bit_storage_exporter:
+    image: bit-0
+    ports:
+      - "127.0.0.1:8080:8080"

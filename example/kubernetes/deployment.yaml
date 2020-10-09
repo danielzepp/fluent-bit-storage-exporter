@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: default
+  name: fluent-bit-storage-exporter
+  labels:
+    app: fluent-bit-storage-exporter
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: fluent-bit-storage-exporter
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 100%
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: fluent-bit-storage-exporter
+    spec:
+      containers:
+        - name: fluent-bit-storage-exporter
+          image: danielkim/fluent-bit-storage-expoter:1.0.0
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: GUNICORN_WORKER_COUNT
+              value: "4"
+            - name: REQUEST_TIMEOUT
+              value: "5"
+          ports:
+            - containerPort: 8080
+              name: http-main
+              protocol: TCP
+          livenessProbe:
+            failureThreshold: 3
+            periodSeconds: 10
+            successThreshold: 1
+            tcpSocket:
+              port: 8080
+            timeoutSeconds: 3
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 3
+          resources:
+            limits:
+              cpu: 500m
+              memory: 300Mi
+            requests:
+              cpu: 500m
+              memory: 300Mi
+      terminationGracePeriodSeconds: 30
